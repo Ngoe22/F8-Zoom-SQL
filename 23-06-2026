@@ -67,3 +67,5 @@ inner join Categories on Products.cat_id = Categories.cat_id
 group by Products.product_name
 order by sum(Sales.quantity) desc
 limit 3
+
+=====================
