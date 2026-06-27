@@ -1,0 +1,69 @@
+-- Câu 1.1
+select order_id, customer_id, total_amount from Orders
+where status = 'completed' and total_amount > 500000
+-- Câu 1.2
+select customer_id ,sum(order_id) , sum(total_amount)  from Orders
+group by customer_id
+HAVING SUM(total_amount) > 1000000;
+
+-- Câu 1.3
+select Customers.name , count(order_id)  from Orders
+INNER JOIN Customers on Orders.customer_id = Customers.customer_id
+GROUP BY Orders.customer_id
+limit 5
+
+========================================
+
+-- Câu 2.1
+select Students.full_name , Students.class , Students.gender from Scores
+INNER JOIN Students on  Scores.student_id = Students.student_id
+INNER JOIN Subjects on  Scores.subject_id = Subjects.subject_id
+where Scores.score > 5 and ( Students.class = 'CNTT01' or Students.class = 'CNTT02' ) and Students.gender = 'F'
+group by Scores.student_id
+
+-- Câu 2.2
+select Scores.subject_id , Subjects.subject_name , AVG(Scores.score) , count( Scores.student_id )  from Scores
+INNER JOIN Students on  Scores.student_id = Students.student_id
+INNER JOIN Subjects on  Scores.subject_id = Subjects.subject_id
+group by Scores.subject_id
+Having AVG(Scores.score) < 6.5 and  count( Scores.student_id ) >= 10
+
+-- Câu 2.3
+select Students.student_id , Students.full_name , Subjects.subject_name , Scores.score  from Scores
+INNER JOIN Students on  Scores.student_id = Students.student_id
+INNER JOIN Subjects on  Scores.subject_id = Subjects.subject_id
+where Scores.score >= 8
+limit 5 offset 10
+
+========================================
+
+
+-- Câu 3.1
+select Categories.cat_id , Categories.cat_name ,
+	sum( Sales.quantity * Products.price )
+    from Sales
+inner join Products on Sales.product_id = Products.product_id
+inner join Employees on Sales.emp_id = Employees.emp_id
+inner join Categories on Products.cat_id = Categories.cat_id
+group by Categories.cat_id
+having sum(Sales.quantity * Products.price) > 50000000;
+
+-- Câu 3.2
+select Employees.emp_name  , COUNT(DISTINCT Categories.cat_name)
+    from Sales
+inner join Products on Sales.product_id = Products.product_id
+inner join Employees on Sales.emp_id = Employees.emp_id
+inner join Categories on Products.cat_id = Categories.cat_id
+where Employees.department = 'Sales'
+group by Employees.emp_id
+HAVING COUNT(DISTINCT Products.product_name) >= 3;
+
+-- Câu 3.3
+select  Products.product_name , sum(Sales.quantity)
+    from Sales
+inner join Products on Sales.product_id = Products.product_id
+inner join Employees on Sales.emp_id = Employees.emp_id
+inner join Categories on Products.cat_id = Categories.cat_id
+group by Products.product_name
+order by sum(Sales.quantity) desc
+limit 3
